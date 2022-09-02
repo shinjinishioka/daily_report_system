@@ -8,7 +8,7 @@ public enum AttributeConst {
     MAX_ROW("maxRow"), PAGE("page"),
 
     //入力フォーム共通
-    TOKEN("_token"), ERR("error"),
+    TOKEN("_token"), ERR("errors"),
 
     //ログイン中の従業員
     LOGIN_EMP("login_employee"),
