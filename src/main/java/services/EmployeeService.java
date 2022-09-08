@@ -277,6 +277,24 @@ public class EmployeeService extends ServiceBase {
 
         return EmployeeConverter.toViewList(employees);
     }
+    public List<Follow> getFollows(int page,String code) {
+        List<Follow> follows = em.createNamedQuery("followGetAllMine", Follow.class)
+                .setParameter(JpaConst.JPQL_PARM_CODE, code)
+                .setFirstResult(JpaConst.ROW_PER_PAGE * (page - 1))
+                .setMaxResults(JpaConst.ROW_PER_PAGE)
+                .getResultList();
+
+        return follows;
+    }
+
+    public EmployeeView getFollow(String code) {
+        Employee employee = em.createNamedQuery(JpaConst.Q_EMP_REGISTERED_BY_CODE, Employee.class)
+                .setParameter(JpaConst.JPQL_PARM_CODE, code)
+                .getSingleResult();
+
+        return EmployeeConverter.toView(employee);
+    }
+
 
 
 }

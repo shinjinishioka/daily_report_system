@@ -1,6 +1,7 @@
 package actions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -288,13 +289,25 @@ public class EmployeeAction extends ActionBase {
 
     }
     public void followIndex() throws ServletException, IOException {
-
+        //ログイン中の社員コードを取得
+        EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+        String loginCode = loginEmployee.getCode();
             //指定されたページ数の一覧画面に表示するデータを取得
             int page = getPage();
-            List<EmployeeView> employees = service.getPerPageFollow(page,"4");
+            //EmployeeViewのリスト作成
+            List<EmployeeView> employees = new ArrayList<EmployeeView>();
+            //Followリスト作成
+            List<Follow> follows = service.getFollows(page, loginCode);
+            for(Follow follow : follows) {
+                String fCode = follow.getFollowCode();
+                employees.add(service.getFollow(fCode));
+            }
+
+
+
 
             //全ての従業員データの件数を取得
-            long employeeCount = service.countAll();
+            long employeeCount = employees.size();
 
             putRequestScope(AttributeConst.EMPLOYEES, employees); //取得した従業員データ
             putRequestScope(AttributeConst.EMP_COUNT, employeeCount); //全ての従業員データの件数
