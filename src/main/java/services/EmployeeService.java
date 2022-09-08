@@ -10,6 +10,7 @@ import actions.views.EmployeeView;
 import constants.JpaConst;
 import models.Employee;
 import models.Follow;
+import models.Follows;
 import models.validators.EmployeeValidator;
 import utils.EncryptUtil;
 
@@ -267,18 +268,22 @@ public class EmployeeService extends ServiceBase {
         em.persist(f);
         em.getTransaction().commit();
     }
+    //フォローの登録
+    public void followAdd(Follows f) {
 
-    public List<EmployeeView> getPerPageFollow(int page,String code) {
-        List<Employee> employees = em.createNamedQuery(JpaConst.Q_EMP_REGISTERED_BY_CODE, Employee.class)
-                .setParameter(JpaConst.JPQL_PARM_CODE, code)
-                .setFirstResult(JpaConst.ROW_PER_PAGE * (page - 1))
-                .setMaxResults(JpaConst.ROW_PER_PAGE)
-                .getResultList();
+        //パスワードをハッシュ化して設定
 
-        return EmployeeConverter.toViewList(employees);
+        //登録日時、更新日時は現在時刻を設定する
+        LocalDateTime now = LocalDateTime.now();
+        f.setCreatedAt(now);
+        em.getTransaction().begin();
+        em.persist(f);
+        em.getTransaction().commit();
     }
-    public List<Follow> getFollows(int page,String code) {
-        List<Follow> follows = em.createNamedQuery("followGetAllMine", Follow.class)
+
+
+    public List<Follows> getAllFollows(int page,String code) {
+        List<Follows> follows = em.createNamedQuery("followsGetAllMine", Follows.class)
                 .setParameter(JpaConst.JPQL_PARM_CODE, code)
                 .setFirstResult(JpaConst.ROW_PER_PAGE * (page - 1))
                 .setMaxResults(JpaConst.ROW_PER_PAGE)

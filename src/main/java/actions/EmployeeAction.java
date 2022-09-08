@@ -6,13 +6,15 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import actions.views.EmployeeConverter;
 import actions.views.EmployeeView;
 import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
 import constants.PropertyConst;
-import models.Follow;
+import models.Employee;
+import models.Follows;
 import services.EmployeeService;
 
 /**
@@ -297,14 +299,10 @@ public class EmployeeAction extends ActionBase {
             //EmployeeViewのリスト作成
             List<EmployeeView> employees = new ArrayList<EmployeeView>();
             //Followリスト作成
-            List<Follow> follows = service.getFollows(page, loginCode);
-            for(Follow follow : follows) {
-                String fCode = follow.getFollowCode();
-                employees.add(service.getFollow(fCode));
+            List<Follows> follows = service.getAllFollows(page, loginCode);
+            for(Follows follow : follows) {
+                employees.add(EmployeeConverter.toView(follow.getFollowCode()));
             }
-
-
-
 
             //全ての従業員データの件数を取得
             long employeeCount = employees.size();
@@ -337,10 +335,9 @@ public class EmployeeAction extends ActionBase {
         EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
         String loginCode = loginEmployee.getCode();
         String followCode = getRequestParam(AttributeConst.EMP_ID);
-
+        Employee fEmp = EmployeeConverter.toModel(service.getFollow(followCode));
             //パラメータの値を元に従業員情報のインスタンスを作成する Code FollowCode
-            Follow f = new Follow(null,loginCode,followCode,null);
-
+              Follows f = new Follows(null,loginCode,fEmp,null);
             //登録
             service.followAdd(f);
 
