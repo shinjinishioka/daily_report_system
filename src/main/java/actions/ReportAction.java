@@ -12,6 +12,7 @@ import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
+import services.EmployeeService;
 import services.ReportService;
 
 /**
@@ -223,6 +224,38 @@ public class ReportAction extends ActionBase {
 
             }
         }
+    }
+    public void followIndex() throws ServletException, IOException {
+
+        //セッションからログイン中の従業員情報を取得 変更する
+        EmployeeService serviceE = new EmployeeService();
+        EmployeeView selectEmployee = serviceE.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+
+        //ログイン中の従業員が作成した日報データを、指定されたページ数の一覧画面に表示する分取得する
+        int page = getPage();
+        List<ReportView> reports = service.getMinePerPage(selectEmployee, page);
+        //従業員名取得
+        String name = selectEmployee.getName();
+
+        //ログイン中の従業員が作成した日報データの件数を取得
+        long myReportsCount = service.countAllMine(selectEmployee);
+        putRequestScope(AttributeConst.EMP_NAME, name);
+        putRequestScope(AttributeConst.REPORTS, reports); //取得した日報データ
+        putRequestScope(AttributeConst.REP_COUNT, myReportsCount); //ログイン中の従業員が作成した日報の数
+        putRequestScope(AttributeConst.PAGE, page); //ページ数
+        putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
+
+        //↑ここまで追記
+
+        //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
+        String flush = getSessionScope(AttributeConst.FLUSH);
+        if (flush != null) {
+            putRequestScope(AttributeConst.FLUSH, flush);
+            removeSessionScope(AttributeConst.FLUSH);
+        }
+
+        //一覧画面を表示
+        forward(ForwardConst.FW_REP_FOLLOW_INDEX);
     }
 
 }

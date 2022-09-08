@@ -21,7 +21,8 @@ public enum ForwardConst {
     CMD_EDIT("edit"),
     CMD_UPDATE("update"),
     CMD_DESTROY("destroy"),
-
+    CMD_FOLLOW_INDEX("followIndex"),
+    CMD_FOLLOW_ADD("followAdd"),
     //jsp
     FW_ERR_UNKNOWN("error/unknown"),
     FW_TOP_INDEX("topPage/index"),
@@ -33,7 +34,9 @@ public enum ForwardConst {
     FW_REP_INDEX("reports/index"),
     FW_REP_SHOW("reports/show"),
     FW_REP_NEW("reports/new"),
-    FW_REP_EDIT("reports/edit");
+    FW_REP_EDIT("reports/edit"),
+    FW_REP_FOLLOW_INDEX("reports/followEmployees"),
+    FW_EMP_FOLLOW_INDEX("employees/followEmployees");
 
     /**
      * 文字列

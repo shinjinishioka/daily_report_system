@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 /**
  * 従業員データのDTOモデル
  *
@@ -34,7 +35,14 @@ import lombok.Setter;
             query = JpaConst.Q_EMP_COUNT_REGISTERED_BY_CODE_DEF),
     @NamedQuery(
             name = JpaConst.Q_EMP_GET_BY_CODE_AND_PASS,
-            query = JpaConst.Q_EMP_GET_BY_CODE_AND_PASS_DEF)
+            query = JpaConst.Q_EMP_GET_BY_CODE_AND_PASS_DEF),
+    @NamedQuery(
+            name = JpaConst.Q_EMP_REGISTERED_BY_CODE,
+            query = JpaConst.Q_EMPT_REGISTERED_BY_CODE_DEF),
+   /* @NamedQuery(
+            name = "followGetAllMinea",
+           query = "SELECT f,e FROM Follow AS f INNER JOIN Employee As e ON f.follow_code = e.code")*/
+
 })
 @Getter //全てのクラスフィールドについてgetterを自動生成する(Lombok)
 @Setter //全てのクラスフィールドについてsetterを自動生成する(Lombok)

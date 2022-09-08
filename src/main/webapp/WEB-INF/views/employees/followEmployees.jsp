@@ -8,8 +8,6 @@
 <c:set var="commShow" value="${ForwardConst.CMD_SHOW.getValue()}" />
 <c:set var="commNew" value="${ForwardConst.CMD_NEW.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
-<c:set var="commFAdd" value="${ForwardConst.CMD_FOLLOW_ADD.getValue()}" />
-
 
 <c:import url="../layout/app.jsp">
     <c:param name="content">
@@ -18,18 +16,15 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2>従業員 一覧</h2>
+        <h2>フォローした社員一覧</h2>
         <table id="employee_list">
             <tbody>
                 <tr>
-                    <th>社員番号</th>
                     <th>氏名</th>
-                    <th>操作</th>
-                    <th>フォロー</th>
+                    <th>日報確認</th>
                 </tr>
                 <c:forEach var="employee" items="${employees}" varStatus="status">
                     <tr class="row${status.count % 2}">
-                        <td><c:out value="${employee.code}" /></td>
                         <td><c:out value="${employee.name}" /></td>
                         <td><c:choose>
                                 <c:when
@@ -38,19 +33,9 @@
                                 </c:when>
                                 <c:otherwise>
                                     <a
-                                        href="<c:url value='?action=${actEmp}&command=${commShow}&id=${employee.id}' />">詳細を見る</a>
+                                        href="<c:url value='?action=Report&command=followIndex&id=${employee.id}' />">日報を見る</a>
                                 </c:otherwise>
                             </c:choose></td>
-                        <td><c:choose>
-                                <c:when test="${sessionScope.login_employee.id == employee.id}">
-
-                                </c:when>
-                                <c:otherwise>
-                                    <a
-                                        href="<c:url value='?action=${actEmp}&command=${commFAdd}&id=${employee.id}' />">フォローする</a>
-                                </c:otherwise>
-                            </c:choose></td>
-
                     </tr>
                 </c:forEach>
             </tbody>
@@ -72,9 +57,6 @@
                 </c:choose>
             </c:forEach>
         </div>
-        <p>
-            <a href="<c:url value='?action=${actEmp}&command=${commNew}' />">新規従業員の登録</a>
-        </p>
 
     </c:param>
 </c:import>

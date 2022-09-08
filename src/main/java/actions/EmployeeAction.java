@@ -11,6 +11,7 @@ import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
 import constants.PropertyConst;
+import models.Follow;
 import services.EmployeeService;
 
 /**
@@ -286,5 +287,58 @@ public class EmployeeAction extends ActionBase {
         }
 
     }
+    public void followIndex() throws ServletException, IOException {
+
+            //指定されたページ数の一覧画面に表示するデータを取得
+            int page = getPage();
+            List<EmployeeView> employees = service.getPerPageFollow(page,"4");
+
+            //全ての従業員データの件数を取得
+            long employeeCount = service.countAll();
+
+            putRequestScope(AttributeConst.EMPLOYEES, employees); //取得した従業員データ
+            putRequestScope(AttributeConst.EMP_COUNT, employeeCount); //全ての従業員データの件数
+            putRequestScope(AttributeConst.PAGE, page); //ページ数
+            putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
+
+            //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
+            String flush = getSessionScope(AttributeConst.FLUSH);
+            if (flush != null) {
+                putRequestScope(AttributeConst.FLUSH, flush);
+                removeSessionScope(AttributeConst.FLUSH);
+            }
+
+            //一覧画面を表示
+            forward(ForwardConst.FW_EMP_FOLLOW_INDEX);
+
+
+
+    }
+    /**
+     * 新規登録を行う
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void followAdd() throws ServletException, IOException {
+        //ログイン中の社員コードを取得
+        EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+        String loginCode = loginEmployee.getCode();
+        String followCode = getRequestParam(AttributeConst.EMP_ID);
+
+            //パラメータの値を元に従業員情報のインスタンスを作成する Code FollowCode
+            Follow f = new Follow(null,loginCode,followCode,null);
+
+            //登録
+            service.followAdd(f);
+
+                //セッションに登録完了のフラッシュメッセージを設定
+                putSessionScope(AttributeConst.FLUSH,"フォローしました。");
+
+                //一覧画面にリダイレクト
+                redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
+
+        }
+
+
 
 }
