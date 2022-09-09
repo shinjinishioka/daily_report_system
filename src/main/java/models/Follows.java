@@ -24,7 +24,10 @@ import lombok.Setter;
 @NamedQueries({
     @NamedQuery(
             name = "followsGetAllMine",
-            query = "SELECT f FROM Follows f WHERE f.code = :code")
+            query = "SELECT f FROM Follows f WHERE f.code = :code"),
+    @NamedQuery(
+            name = "followGetData",
+            query = "SELECT f FROM Follows f WHERE f.code =:code "),
 })
 
 @Getter //全てのクラスフィールドについてgetterを自動生成する(Lombok)

@@ -52,6 +52,13 @@ public class EmployeeAction extends ActionBase {
             int page = getPage();
             List<EmployeeView> employees = service.getPerPage(page);
 
+            //ログイン中の社員コードを取得
+            EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+            String loginCode = loginEmployee.getCode();
+
+            //Followリスト作成
+            List<Follows> follows = service.getAllFollows(page, loginCode);
+
             //全ての従業員データの件数を取得
             long employeeCount = service.countAll();
 
@@ -59,6 +66,8 @@ public class EmployeeAction extends ActionBase {
             putRequestScope(AttributeConst.EMP_COUNT, employeeCount); //全ての従業員データの件数
             putRequestScope(AttributeConst.PAGE, page); //ページ数
             putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
+            putRequestScope(AttributeConst.FOLLOWS, follows); //取得した従業員データ
+            //request.setAttribute("loginCode", loginCode); //ログインコード
 
             //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
             String flush = getSessionScope(AttributeConst.FLUSH);
@@ -303,7 +312,7 @@ public class EmployeeAction extends ActionBase {
         //全ての従業員データの件数を取得
         long followsCount = follows.size();
 
-        putRequestScope(AttributeConst.EMPLOYEES, follows); //取得した従業員データ
+        putRequestScope(AttributeConst.FOLLOWS, follows); //取得した従業員データ
         putRequestScope(AttributeConst.EMP_COUNT, followsCount); //全ての従業員データの件数
         putRequestScope(AttributeConst.PAGE, page); //ページ数
         putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
@@ -329,6 +338,7 @@ public class EmployeeAction extends ActionBase {
         //ログイン中の社員コードを取得
         EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
         String loginCode = loginEmployee.getCode();
+        //フォローする社員コード取得
         String followCode = getRequestParam(AttributeConst.EMP_ID);
         Employee fEmp = EmployeeConverter.toModel(service.getFollow(followCode));
         //パラメータの値を元に従業員情報のインスタンスを作成する Code FollowCode
@@ -338,6 +348,22 @@ public class EmployeeAction extends ActionBase {
 
         //セッションに登録完了のフラッシュメッセージを設定
         putSessionScope(AttributeConst.FLUSH, "フォローしました。");
+
+        //一覧画面にリダイレクト
+        redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
+
+    }
+
+    public void followDestroy() throws ServletException, IOException {
+
+        int followId = Integer.parseInt(getRequestParam(AttributeConst.EMP_ID));
+
+        Follows f = service.getFollowDataById(followId);
+
+        service.followsDestroy(f);
+
+        //セッションに削除完了のフラッシュメッセージを設定
+        putSessionScope(AttributeConst.FLUSH, "フォローを解除しました");
 
         //一覧画面にリダイレクト
         redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);

@@ -269,8 +269,7 @@ public class EmployeeService extends ServiceBase {
         em.getTransaction().commit();
     }
 
-
-    public List<Follows> getAllFollows(int page,String code) {
+    public List<Follows> getAllFollows(int page, String code) {
         List<Follows> follows = em.createNamedQuery("followsGetAllMine", Follows.class)
                 .setParameter(JpaConst.JPQL_PARM_CODE, code)
                 .setFirstResult(JpaConst.ROW_PER_PAGE * (page - 1))
@@ -288,6 +287,19 @@ public class EmployeeService extends ServiceBase {
         return EmployeeConverter.toView(employee);
     }
 
+    public Follows getFollowDataById(int code) {
+        Follows follows = em.createQuery("SELECT f FROM Follows f WHERE f.id ="+ code , Follows.class)
+                .getSingleResult();
+        return follows;
+    }
 
+    /*
+     *フォローのデータ削除
+     */
+    public void followsDestroy(Follows f) {
+        em.getTransaction().begin();
+        em.remove(f); // データ削除
+        em.getTransaction().commit();
+    }
 
 }

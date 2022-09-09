@@ -23,17 +23,17 @@
                     <th>氏名</th>
                     <th>日報確認</th>
                 </tr>
-                <c:forEach var="employee" items="${employees}" varStatus="status">
+                <c:forEach var="follow" items="${follows}" varStatus="status">
                     <tr class="row${status.count % 2}">
-                        <td><c:out value="${employee.followCode.name}" /></td>
+                        <td><c:out value="${follow.followCode.name}" /></td>
                         <td><c:choose>
                                 <c:when
-                                    test="${employee.followCode.deleteFlag == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()}">
+                                    test="${follow.followCode.deleteFlag == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()}">
                                     （削除済み）
                                 </c:when>
                                 <c:otherwise>
                                     <a
-                                        href="<c:url value='?action=Report&command=followIndex&id=${employee.followCode.id}' />">日報を見る</a>
+                                        href="<c:url value='?action=Report&command=followIndex&id=${follow.followCode.id}' />">日報を見る</a>
                                 </c:otherwise>
                             </c:choose></td>
                     </tr>

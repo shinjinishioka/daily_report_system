@@ -23,6 +23,7 @@ public enum ForwardConst {
     CMD_DESTROY("destroy"),
     CMD_FOLLOW_INDEX("followIndex"),
     CMD_FOLLOW_ADD("followAdd"),
+    CMD_FOLLOW_DELETE("followDestroy"),
     //jsp
     FW_ERR_UNKNOWN("error/unknown"),
     FW_TOP_INDEX("topPage/index"),
