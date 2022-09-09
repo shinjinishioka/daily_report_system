@@ -9,7 +9,6 @@ import actions.views.EmployeeConverter;
 import actions.views.EmployeeView;
 import constants.JpaConst;
 import models.Employee;
-import models.Follow;
 import models.Follows;
 import models.validators.EmployeeValidator;
 import utils.EncryptUtil;
@@ -256,18 +255,7 @@ public class EmployeeService extends ServiceBase {
         em.getTransaction().commit();
 
     }
-    //フォローの登録
-    public void followAdd(Follow f) {
 
-        //パスワードをハッシュ化して設定
-
-        //登録日時、更新日時は現在時刻を設定する
-        LocalDateTime now = LocalDateTime.now();
-        f.setCreatedAt(now);
-        em.getTransaction().begin();
-        em.persist(f);
-        em.getTransaction().commit();
-    }
     //フォローの登録
     public void followAdd(Follows f) {
 

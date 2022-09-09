@@ -19,10 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * 日報データのDTOモデル
- *
- */
+
 @Table(name = "follows")
 @NamedQueries({
     @NamedQuery(

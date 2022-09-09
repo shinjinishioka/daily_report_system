@@ -1,7 +1,6 @@
 package actions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -290,41 +289,37 @@ public class EmployeeAction extends ActionBase {
         }
 
     }
+
     public void followIndex() throws ServletException, IOException {
         //ログイン中の社員コードを取得
         EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
         String loginCode = loginEmployee.getCode();
-            //指定されたページ数の一覧画面に表示するデータを取得
-            int page = getPage();
-            //EmployeeViewのリスト作成
-            List<EmployeeView> employees = new ArrayList<EmployeeView>();
-            //Followリスト作成
-            List<Follows> follows = service.getAllFollows(page, loginCode);
-            for(Follows follow : follows) {
-                employees.add(EmployeeConverter.toView(follow.getFollowCode()));
-            }
+        //指定されたページ数の一覧画面に表示するデータを取得
+        int page = getPage();
 
-            //全ての従業員データの件数を取得
-            long employeeCount = employees.size();
+        //Followリスト作成
+        List<Follows> follows = service.getAllFollows(page, loginCode);
 
-            putRequestScope(AttributeConst.EMPLOYEES, employees); //取得した従業員データ
-            putRequestScope(AttributeConst.EMP_COUNT, employeeCount); //全ての従業員データの件数
-            putRequestScope(AttributeConst.PAGE, page); //ページ数
-            putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
+        //全ての従業員データの件数を取得
+        long followsCount = follows.size();
 
-            //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
-            String flush = getSessionScope(AttributeConst.FLUSH);
-            if (flush != null) {
-                putRequestScope(AttributeConst.FLUSH, flush);
-                removeSessionScope(AttributeConst.FLUSH);
-            }
+        putRequestScope(AttributeConst.EMPLOYEES, follows); //取得した従業員データ
+        putRequestScope(AttributeConst.EMP_COUNT, followsCount); //全ての従業員データの件数
+        putRequestScope(AttributeConst.PAGE, page); //ページ数
+        putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
 
-            //一覧画面を表示
-            forward(ForwardConst.FW_EMP_FOLLOW_INDEX);
+        //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
+        String flush = getSessionScope(AttributeConst.FLUSH);
+        if (flush != null) {
+            putRequestScope(AttributeConst.FLUSH, flush);
+            removeSessionScope(AttributeConst.FLUSH);
+        }
 
-
+        //一覧画面を表示
+        forward(ForwardConst.FW_EMP_FOLLOW_INDEX);
 
     }
+
     /**
      * 新規登録を行う
      * @throws ServletException
@@ -336,19 +331,17 @@ public class EmployeeAction extends ActionBase {
         String loginCode = loginEmployee.getCode();
         String followCode = getRequestParam(AttributeConst.EMP_ID);
         Employee fEmp = EmployeeConverter.toModel(service.getFollow(followCode));
-            //パラメータの値を元に従業員情報のインスタンスを作成する Code FollowCode
-              Follows f = new Follows(null,loginCode,fEmp,null);
-            //登録
-            service.followAdd(f);
+        //パラメータの値を元に従業員情報のインスタンスを作成する Code FollowCode
+        Follows f = new Follows(null, loginCode, fEmp, null);
+        //登録
+        service.followAdd(f);
 
-                //セッションに登録完了のフラッシュメッセージを設定
-                putSessionScope(AttributeConst.FLUSH,"フォローしました。");
+        //セッションに登録完了のフラッシュメッセージを設定
+        putSessionScope(AttributeConst.FLUSH, "フォローしました。");
 
-                //一覧画面にリダイレクト
-                redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
+        //一覧画面にリダイレクト
+        redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
 
-        }
-
-
+    }
 
 }
