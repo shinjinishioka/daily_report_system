@@ -3,11 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="constants.ForwardConst"%>
-
+<c:set var="actEmp" value="${ForwardConst.ACT_EMP.getValue()}" />
 <c:set var="actRep" value="${ForwardConst.ACT_REP.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
 <c:set var="commShow" value="${ForwardConst.CMD_SHOW.getValue()}" />
 <c:set var="commNew" value="${ForwardConst.CMD_NEW.getValue()}" />
+<c:set var="commFollowIdx"
+    value="${ForwardConst.CMD_FOLLOW_INDEX.getValue()}" />
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
@@ -16,7 +18,10 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2><c:out value="${name}"></c:out>さんの日報一覧</h2>
+        <h2>
+            <c:out value="${name}"></c:out>
+            さんの日報一覧
+        </h2>
         <table id="report_list">
             <tbody>
                 <tr>
@@ -52,7 +57,7 @@
                     </c:when>
                     <c:otherwise>
                         <a
-                            href="<c:url value='?action=${actRep}&command=${commIdx}&page=${i}' />"><c:out
+                            href="<c:url value='?action=${actEmp}&command=${commFollowIdx}&page=${i}' />"><c:out
                                 value="${i}" /></a>&nbsp;
                     </c:otherwise>
                 </c:choose>

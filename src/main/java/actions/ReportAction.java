@@ -2,16 +2,19 @@ package actions;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
 
+import actions.views.EmployeeConverter;
 import actions.views.EmployeeView;
 import actions.views.ReportView;
 import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
+import models.Follows;
 import services.EmployeeService;
 import services.ReportService;
 
@@ -225,9 +228,10 @@ public class ReportAction extends ActionBase {
             }
         }
     }
+
     public void followIndex() throws ServletException, IOException {
 
-        //セッションからログイン中の従業員情報を取得 変更する
+        //セッションからログイン中の従業員情報を取得
         EmployeeService serviceE = new EmployeeService();
         EmployeeView selectEmployee = serviceE.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
@@ -256,6 +260,62 @@ public class ReportAction extends ActionBase {
 
         //一覧画面を表示
         forward(ForwardConst.FW_REP_FOLLOW_INDEX);
+    }
+
+    public void followTopIndex() throws ServletException, IOException {
+        //ログイン中の社員コードを取得
+        EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+        String loginCode = loginEmployee.getCode();
+        //EmployeeServiceのインスタンス作成
+        EmployeeService serviceE = new EmployeeService();
+
+        //指定されたページ数の一覧画面に表示する日報データを取得
+        int page = getPage();
+        //Followリスト作成
+        List<Follows> follows = serviceE.getAllFollows(page, loginCode);
+
+        //ReportViewのリスト作成
+        List<ReportView> reports = new ArrayList<ReportView>();
+
+        //フォローした全従業員の日報データの件数を取得
+        long reportsCount = 0;
+
+        for (Follows f : follows) {
+            reports.addAll(service.getMinePerPage(EmployeeConverter.toView(f.getFollowCode()), page));
+            reportsCount = reportsCount + service.countAllMine(EmployeeConverter.toView(f.getFollowCode()));
+        }
+        reports = sortByUpdate(reports);
+        putRequestScope(AttributeConst.REPORTS, reports); //取得した日報データ
+        putRequestScope(AttributeConst.REP_COUNT, reportsCount); //全ての日報データの件数
+        putRequestScope(AttributeConst.PAGE, page); //ページ数
+        putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
+
+        //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
+        String flush = getSessionScope(AttributeConst.FLUSH);
+        if (flush != null) {
+            putRequestScope(AttributeConst.FLUSH, flush);
+            removeSessionScope(AttributeConst.FLUSH);
+        }
+
+        //一覧画面を表示
+        forward(ForwardConst.FW_REP_FOLLOW_REP);
+    }
+
+    //バブルソートで日報のアップデート順に並べ替え
+    public List<ReportView> sortByUpdate(List<ReportView> reports) {
+
+        for (int i = 0; i < reports.size() - 1; i++) {
+            for (int j = reports.size() - 1; j > i; j--) {
+                if (reports.get(j - 1).getUpdatedAt().isBefore(reports.get(j).getUpdatedAt())) {
+                    // 入れ替え
+                    ReportView tmp = reports.get(j - 1);
+                    reports.set(j - 1, reports.get(j));
+                    reports.set(j, tmp);
+                }
+            }
+        }
+        return reports;
+
     }
 
 }

@@ -22,6 +22,7 @@ public enum ForwardConst {
     CMD_UPDATE("update"),
     CMD_DESTROY("destroy"),
     CMD_FOLLOW_INDEX("followIndex"),
+    CMD_FOLLOW_TOP("followTopIndex"),
     CMD_FOLLOW_ADD("followAdd"),
     CMD_FOLLOW_DELETE("followDestroy"),
     //jsp
@@ -37,6 +38,7 @@ public enum ForwardConst {
     FW_REP_NEW("reports/new"),
     FW_REP_EDIT("reports/edit"),
     FW_REP_FOLLOW_INDEX("reports/followEmployees"),
+    FW_REP_FOLLOW_REP("reports/followReports"),
     FW_EMP_FOLLOW_INDEX("employees/followEmployees");
 
     /**

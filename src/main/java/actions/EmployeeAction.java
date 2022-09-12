@@ -57,7 +57,7 @@ public class EmployeeAction extends ActionBase {
             String loginCode = loginEmployee.getCode();
 
             //Followリスト作成
-            List<Follows> follows = service.getAllFollows(page, loginCode);
+            List<Follows> follows = service.getAllFollows(loginCode);
 
             //全ての従業員データの件数を取得
             long employeeCount = service.countAll();
@@ -298,7 +298,7 @@ public class EmployeeAction extends ActionBase {
         }
 
     }
-
+//フォロー中の社員一覧を取得
     public void followIndex() throws ServletException, IOException {
         //ログイン中の社員コードを取得
         EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
@@ -307,10 +307,10 @@ public class EmployeeAction extends ActionBase {
         int page = getPage();
 
         //Followリスト作成
-        List<Follows> follows = service.getAllFollows(page, loginCode);
+        List<Follows> follows = service.getAllFollows(page,loginCode);
 
         //全ての従業員データの件数を取得
-        long followsCount = follows.size();
+        long followsCount = service.countAllFollows();
 
         putRequestScope(AttributeConst.FOLLOWS, follows); //取得した従業員データ
         putRequestScope(AttributeConst.EMP_COUNT, followsCount); //全ての従業員データの件数

@@ -43,6 +43,13 @@ public class EmployeeService extends ServiceBase {
         return empCount;
     }
 
+    public long countAllFollows() {
+        long empCount = (long) em.createQuery("SELECT COUNT(f) FROM Follows AS f", Long.class)
+                .getSingleResult();
+
+        return empCount;
+    }
+
     /**
      * 社員番号、パスワードを条件に取得したデータをEmployeeViewのインスタンスで返却する
      * @param code 社員番号
@@ -267,6 +274,14 @@ public class EmployeeService extends ServiceBase {
         em.getTransaction().begin();
         em.persist(f);
         em.getTransaction().commit();
+    }
+
+    public List<Follows> getAllFollows(String code) {
+        List<Follows> follows = em.createNamedQuery("followsGetAllMine", Follows.class)
+                .setParameter(JpaConst.JPQL_PARM_CODE, code)
+                .getResultList();
+
+        return follows;
     }
 
     public List<Follows> getAllFollows(int page, String code) {

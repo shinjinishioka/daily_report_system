@@ -4,37 +4,21 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="constants.ForwardConst"%>
 
-<c:set var="actTop" value="${ForwardConst.ACT_TOP.getValue()}" />
-<c:set var="actEmp" value="${ForwardConst.ACT_EMP.getValue()}" />
 <c:set var="actRep" value="${ForwardConst.ACT_REP.getValue()}" />
-
-<c:set var="commShow" value="${ForwardConst.CMD_SHOW.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
+<c:set var="commShow" value="${ForwardConst.CMD_SHOW.getValue()}" />
 <c:set var="commNew" value="${ForwardConst.CMD_NEW.getValue()}" />
-<c:set var="commFollowIdx"
-    value="${ForwardConst.CMD_FOLLOW_INDEX.getValue()}" />
 <c:set var="commFollowTop"
     value="${ForwardConst.CMD_FOLLOW_TOP.getValue()}" />
 
-<c:import url="../layout/app.jsp">
+<c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
         <c:if test="${flush != null}">
             <div id="flush_success">
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2>日報管理システムへようこそ</h2>
-        <div class="indexContainer">
-            <h3>【自分の日報 一覧】</h3>
-            <h3>
-                <a
-                    href="<c:url value='?action=${actEmp}&command=${commFollowIdx}' />">【フォローした社員をみる】</a>
-            </h3>
-            <h3>
-                <a
-                    href="<c:url value='?action=${actRep}&command=${commFollowTop}' />">【フォローした社員の日報】</a>
-            </h3>
-        </div>
+        <h2>フォローした社員の日報一覧</h2>
         <table id="report_list">
             <tbody>
                 <tr>
@@ -46,6 +30,7 @@
                 <c:forEach var="report" items="${reports}" varStatus="status">
                     <fmt:parseDate value="${report.reportDate}" pattern="yyyy-MM-dd"
                         var="reportDay" type="date" />
+
                     <tr class="row${status.count % 2}">
                         <td class="report_name"><c:out
                                 value="${report.employee.name}" /></td>
@@ -69,7 +54,7 @@
                     </c:when>
                     <c:otherwise>
                         <a
-                            href="<c:url value='?action=${actTop}&command=${commIdx}&page=${i}' />"><c:out
+                            href="<c:url value='?action=${actRep}&command=${commFollowTop}&page=${i}' />"><c:out
                                 value="${i}" /></a>&nbsp;
                     </c:otherwise>
                 </c:choose>
@@ -78,5 +63,6 @@
         <p>
             <a href="<c:url value='?action=${actRep}&command=${commNew}' />">新規日報の登録</a>
         </p>
+
     </c:param>
 </c:import>

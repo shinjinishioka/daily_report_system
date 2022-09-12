@@ -8,6 +8,8 @@
 <c:set var="commShow" value="${ForwardConst.CMD_SHOW.getValue()}" />
 <c:set var="commNew" value="${ForwardConst.CMD_NEW.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
+<c:set var="commFollowIdx"
+    value="${ForwardConst.CMD_FOLLOW_INDEX.getValue()}" />
 
 <c:import url="../layout/app.jsp">
     <c:param name="content">
@@ -51,7 +53,7 @@
                     </c:when>
                     <c:otherwise>
                         <a
-                            href="<c:url value='?action=${actEmp}&command=${commIdx}&page=${i}' />"><c:out
+                            href="<c:url value='?action=${actEmp}&command=${commFollowIdx}&page=${i}' />"><c:out
                                 value="${i}" /></a>&nbsp;
                     </c:otherwise>
                 </c:choose>
