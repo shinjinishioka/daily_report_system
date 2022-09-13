@@ -43,6 +43,7 @@ public class EmployeeService extends ServiceBase {
         return empCount;
     }
 
+    //削除されていない従業員のデータ件数
     public long countExceptDelete() {
         long empCount = (long) em.createQuery("SELECT COUNT(e) FROM Employee AS e WHERE e.deleteFlag = 0", Long.class)
                 .getSingleResult();
@@ -50,6 +51,7 @@ public class EmployeeService extends ServiceBase {
         return empCount;
     }
 
+    //フォロー中の従業員のデータ件数
     public long countAllFollows() {
         long empCount = (long) em.createQuery("SELECT COUNT(f) FROM Follows AS f", Long.class)
                 .getSingleResult();
@@ -270,19 +272,6 @@ public class EmployeeService extends ServiceBase {
 
     }
 
-    //フォローの登録
-    public void followAdd(Follows f) {
-
-        //パスワードをハッシュ化して設定
-
-        //登録日時、更新日時は現在時刻を設定する
-        LocalDateTime now = LocalDateTime.now();
-        f.setCreatedAt(now);
-        em.getTransaction().begin();
-        em.persist(f);
-        em.getTransaction().commit();
-    }
-
     public List<Follows> getAllFollows(String code) {
         List<Follows> follows = em.createNamedQuery("followsGetAllMine", Follows.class)
                 .setParameter(JpaConst.JPQL_PARM_CODE, code)
@@ -290,7 +279,7 @@ public class EmployeeService extends ServiceBase {
 
         return follows;
     }
-
+/*
     public List<Follows> getAllFollows(int page, String code) {
         List<Follows> follows = em.createNamedQuery("followsGetAllMine", Follows.class)
                 .setParameter(JpaConst.JPQL_PARM_CODE, code)
@@ -300,7 +289,7 @@ public class EmployeeService extends ServiceBase {
 
         return follows;
     }
-
+*/
     public EmployeeView getFollow(String code) {
         Employee employee = em.createNamedQuery(JpaConst.Q_EMP_REGISTERED_BY_CODE, Employee.class)
                 .setParameter(JpaConst.JPQL_PARM_CODE, code)
@@ -310,14 +299,22 @@ public class EmployeeService extends ServiceBase {
     }
 
     public Follows getFollowDataById(int code) {
-        Follows follows = em.createQuery("SELECT f FROM Follows f WHERE f.id ="+ code , Follows.class)
+        Follows follows = em.createQuery("SELECT f FROM Follows f WHERE f.id =" + code, Follows.class)
                 .getSingleResult();
         return follows;
     }
 
-    /*
-     *フォローのデータ削除
-     */
+    //フォローの登録
+    public void followAdd(Follows f) {
+        //登録日時、更新日時は現在時刻を設定する
+        LocalDateTime now = LocalDateTime.now();
+        f.setCreatedAt(now);
+        em.getTransaction().begin();
+        em.persist(f);
+        em.getTransaction().commit();
+    }
+
+    //フォローのデータ削除
     public void followsDestroy(Follows f) {
         em.getTransaction().begin();
         em.remove(f); // データ削除
