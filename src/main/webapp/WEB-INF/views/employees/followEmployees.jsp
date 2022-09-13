@@ -5,9 +5,10 @@
 <%@ page import="constants.ForwardConst"%>
 
 <c:set var="actEmp" value="${ForwardConst.ACT_EMP.getValue()}" />
-<c:set var="commShow" value="${ForwardConst.CMD_SHOW.getValue()}" />
-<c:set var="commNew" value="${ForwardConst.CMD_NEW.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
+<c:set var="commFAdd" value="${ForwardConst.CMD_FOLLOW_ADD.getValue()}" />
+<c:set var="commFDestroy"
+    value="${ForwardConst.CMD_FOLLOW_DELETE.getValue()}" />
 <c:set var="commFollowIdx"
     value="${ForwardConst.CMD_FOLLOW_INDEX.getValue()}" />
 
@@ -18,27 +19,38 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2>フォローした社員一覧</h2>
+        <h2>従業員 一覧</h2>
         <table id="employee_list">
             <tbody>
                 <tr>
                     <th>氏名</th>
-                    <th>日報確認</th>
+                    <th>フォロー</th>
                 </tr>
-                <c:forEach var="follow" items="${follows}" varStatus="status">
-                    <tr class="row${status.count % 2}">
-                        <td><c:out value="${follow.followCode.name}" /></td>
-                        <td><c:choose>
-                                <c:when
-                                    test="${follow.followCode.deleteFlag == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()}">
-                                    （削除済み）
-                                </c:when>
-                                <c:otherwise>
-                                    <a
-                                        href="<c:url value='?action=Report&command=followIndex&id=${follow.followCode.id}' />">日報を見る</a>
-                                </c:otherwise>
-                            </c:choose></td>
-                    </tr>
+                <c:forEach var="employee" items="${employees}" varStatus="status">
+                    <c:if
+                        test="${sessionScope.login_employee.id != employee.id && employee.deleteFlag != AttributeConst.DEL_FLAG_TRUE.getIntegerValue()}">
+                        <c:set var="followed" value="0" />
+                        <c:forEach var="follow" items="${follows}">
+                            <c:if test="${follow.followCode.id == employee.id}">
+                                <c:set var="followed" value="1" />
+                                <c:set var="followId" value="${follow.id}" />
+                            </c:if>
+                        </c:forEach>
+                        <tr class="row${status.count % 2}">
+                            <td><c:out value="${employee.name}" /></td>
+
+                            <td><c:choose>
+                                    <c:when test="${followed == 1}">
+                                      フォロー済み   <a
+                                            href="<c:url value='?action=${actEmp}&command=${commFDestroy}&id=${followId}' />">【解除する】</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a
+                                            href="<c:url value='?action=${actEmp}&command=${commFAdd}&id=${employee.id}' />">フォローする</a>
+                                    </c:otherwise>
+                                </c:choose></td>
+                        </tr>
+                    </c:if>
                 </c:forEach>
             </tbody>
         </table>
@@ -59,6 +71,5 @@
                 </c:choose>
             </c:forEach>
         </div>
-
     </c:param>
 </c:import>

@@ -298,24 +298,28 @@ public class EmployeeAction extends ActionBase {
         }
 
     }
-//フォロー中の社員一覧を取得
+//社員一覧を取得
     public void followIndex() throws ServletException, IOException {
+        //指定されたページ数の一覧画面に表示するデータを取得
+        int page = getPage();
+        List<EmployeeView> employees = service.getPerPage(page);
+
         //ログイン中の社員コードを取得
         EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
         String loginCode = loginEmployee.getCode();
-        //指定されたページ数の一覧画面に表示するデータを取得
-        int page = getPage();
 
         //Followリスト作成
-        List<Follows> follows = service.getAllFollows(page,loginCode);
+        List<Follows> follows = service.getAllFollows(loginCode);
 
         //全ての従業員データの件数を取得
-        long followsCount = service.countAllFollows();
+        long employeeCount = service.countAll();
 
-        putRequestScope(AttributeConst.FOLLOWS, follows); //取得した従業員データ
-        putRequestScope(AttributeConst.EMP_COUNT, followsCount); //全ての従業員データの件数
+        putRequestScope(AttributeConst.EMPLOYEES, employees); //取得した従業員データ
+        putRequestScope(AttributeConst.EMP_COUNT, employeeCount); //全ての従業員データの件数
         putRequestScope(AttributeConst.PAGE, page); //ページ数
         putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
+        putRequestScope(AttributeConst.FOLLOWS, follows); //取得した従業員データ
+        //request.setAttribute("loginCode", loginCode); //ログインコード
 
         //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
         String flush = getSessionScope(AttributeConst.FLUSH);
@@ -350,7 +354,7 @@ public class EmployeeAction extends ActionBase {
         putSessionScope(AttributeConst.FLUSH, "フォローしました。");
 
         //一覧画面にリダイレクト
-        redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
+        redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_FOLLOW_INDEX);
 
     }
 
@@ -366,7 +370,7 @@ public class EmployeeAction extends ActionBase {
         putSessionScope(AttributeConst.FLUSH, "フォローを解除しました");
 
         //一覧画面にリダイレクト
-        redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
+        redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_FOLLOW_INDEX);
 
     }
 

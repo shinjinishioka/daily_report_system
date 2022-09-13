@@ -28,7 +28,7 @@
             <h3>【自分の日報 一覧】</h3>
             <h3>
                 <a
-                    href="<c:url value='?action=${actEmp}&command=${commFollowIdx}' />">【フォローした社員をみる】</a>
+                    href="<c:url value='?action=${actEmp}&command=${commFollowIdx}' />">【社員のフォロー】</a>
             </h3>
             <h3>
                 <a
