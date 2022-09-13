@@ -298,28 +298,20 @@ public class EmployeeAction extends ActionBase {
         }
 
     }
-//社員一覧を取得
+
+    //社員一覧を取得
     public void followIndex() throws ServletException, IOException {
         //指定されたページ数の一覧画面に表示するデータを取得
         int page = getPage();
         List<EmployeeView> employees = service.getPerPage(page);
 
-        //ログイン中の社員コードを取得
-        EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
-        String loginCode = loginEmployee.getCode();
-
-        //Followリスト作成
-        List<Follows> follows = service.getAllFollows(loginCode);
-
-        //全ての従業員データの件数を取得
-        long employeeCount = service.countAll();
+        //自分と削除済みの従業員以外の件数を取得
+        long employeeCount = service.countExceptDelete() - 1;
 
         putRequestScope(AttributeConst.EMPLOYEES, employees); //取得した従業員データ
-        putRequestScope(AttributeConst.EMP_COUNT, employeeCount); //全ての従業員データの件数
+        putRequestScope(AttributeConst.EMP_COUNT, employeeCount); //従業員データの件数
         putRequestScope(AttributeConst.PAGE, page); //ページ数
         putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
-        putRequestScope(AttributeConst.FOLLOWS, follows); //取得した従業員データ
-        //request.setAttribute("loginCode", loginCode); //ログインコード
 
         //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
         String flush = getSessionScope(AttributeConst.FLUSH);

@@ -9,7 +9,8 @@
 <c:set var="commNew" value="${ForwardConst.CMD_NEW.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
 <c:set var="commFAdd" value="${ForwardConst.CMD_FOLLOW_ADD.getValue()}" />
-<c:set var="commFDestroy" value="${ForwardConst.CMD_FOLLOW_DELETE.getValue()}" />
+<c:set var="commFDestroy"
+    value="${ForwardConst.CMD_FOLLOW_DELETE.getValue()}" />
 
 
 <c:import url="../layout/app.jsp">
@@ -26,7 +27,6 @@
                     <th>社員番号</th>
                     <th>氏名</th>
                     <th>操作</th>
-                    <th>フォロー</th>
                 </tr>
                 <c:forEach var="employee" items="${employees}" varStatus="status">
                     <c:set var="followed" value="0" />
@@ -51,25 +51,6 @@
                                         href="<c:url value='?action=${actEmp}&command=${commShow}&id=${employee.id}' />">詳細を見る</a>
                                 </c:otherwise>
                             </c:choose></td>
-
-                        <td><c:choose>
-                                <c:when
-                                    test="${sessionScope.login_employee.id == employee.id || employee.deleteFlag == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()}">
-
-                                </c:when>
-                                <c:otherwise>
-                                    <c:choose>
-                                        <c:when test="${followed == 1}">
-                                      フォロー済み   <a href="<c:url value='?action=${actEmp}&command=${commFDestroy}&id=${followId}' />">【解除する】</a>
-                                     </c:when>
-                                        <c:otherwise>
-                                            <a
-                                                href="<c:url value='?action=${actEmp}&command=${commFAdd}&id=${employee.id}' />">フォローする</a>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:otherwise>
-                            </c:choose></td>
-
                     </tr>
                 </c:forEach>
             </tbody>

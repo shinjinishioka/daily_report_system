@@ -11,6 +11,7 @@
     value="${ForwardConst.CMD_FOLLOW_DELETE.getValue()}" />
 <c:set var="commFollowIdx"
     value="${ForwardConst.CMD_FOLLOW_INDEX.getValue()}" />
+<c:set var="count" value="0"/>
 
 <c:import url="../layout/app.jsp">
     <c:param name="content">
@@ -19,7 +20,7 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2>従業員 一覧</h2>
+        <h2>フォロー可能な従業員一覧</h2>
         <table id="employee_list">
             <tbody>
                 <tr>
@@ -27,6 +28,7 @@
                     <th>フォロー</th>
                 </tr>
                 <c:forEach var="employee" items="${employees}" varStatus="status">
+
                     <c:if
                         test="${sessionScope.login_employee.id != employee.id && employee.deleteFlag != AttributeConst.DEL_FLAG_TRUE.getIntegerValue()}">
                         <c:set var="followed" value="0" />

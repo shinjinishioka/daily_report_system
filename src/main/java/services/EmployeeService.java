@@ -43,6 +43,13 @@ public class EmployeeService extends ServiceBase {
         return empCount;
     }
 
+    public long countExceptDelete() {
+        long empCount = (long) em.createQuery("SELECT COUNT(e) FROM Employee AS e WHERE e.deleteFlag = 0", Long.class)
+                .getSingleResult();
+
+        return empCount;
+    }
+
     public long countAllFollows() {
         long empCount = (long) em.createQuery("SELECT COUNT(f) FROM Follows AS f", Long.class)
                 .getSingleResult();

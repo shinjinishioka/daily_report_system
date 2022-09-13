@@ -28,12 +28,13 @@
             <h3>【自分の日報 一覧】</h3>
             <h3>
                 <a
-                    href="<c:url value='?action=${actEmp}&command=${commFollowIdx}' />">【社員のフォロー】</a>
+                    href="<c:url value='?action=${actRep}&command=${commFollowTop}' />">【フォローした社員の日報】</a>
             </h3>
             <h3>
                 <a
-                    href="<c:url value='?action=${actRep}&command=${commFollowTop}' />">【フォローした社員の日報】</a>
+                    href="<c:url value='?action=${actEmp}&command=${commFollowIdx}' />">【社員のフォロー】</a>
             </h3>
+
         </div>
         <table id="report_list">
             <tbody>
