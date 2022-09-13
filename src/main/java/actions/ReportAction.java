@@ -272,7 +272,7 @@ public class ReportAction extends ActionBase {
         //指定されたページ数の一覧画面に表示する日報データを取得
         int page = getPage();
         //Followリスト作成
-        List<Follows> follows = serviceE.getAllFollows(page, loginCode);
+        List<Follows> follows = serviceE.getAllFollows(loginCode);
 
         //ReportViewのリスト作成
         List<ReportView> reports = new ArrayList<ReportView>();
@@ -281,10 +281,14 @@ public class ReportAction extends ActionBase {
         long reportsCount = 0;
 
         for (Follows f : follows) {
-            reports.addAll(service.getMinePerPage(EmployeeConverter.toView(f.getFollowCode()), page));
+            reports.addAll(service.getMine(EmployeeConverter.toView(f.getFollowCode())));
             reportsCount = reportsCount + service.countAllMine(EmployeeConverter.toView(f.getFollowCode()));
         }
+        //アップデート順での並び替え
         reports = sortByUpdate(reports);
+        //ページネーション用
+        reports = getReportsPerPage(reports, page, reportsCount);
+        System.out.println("レポートの要素数" + reports.size());
         putRequestScope(AttributeConst.REPORTS, reports); //取得した日報データ
         putRequestScope(AttributeConst.REP_COUNT, reportsCount); //全ての日報データの件数
         putRequestScope(AttributeConst.PAGE, page); //ページ数
@@ -315,6 +319,27 @@ public class ReportAction extends ActionBase {
             }
         }
         return reports;
+
+    }
+
+    //ページネーション用
+    public List<ReportView> getReportsPerPage(List<ReportView> reports, int page, long reportsCount) {
+        List<ReportView> reportsPerPage = new ArrayList<ReportView>();
+        //ページネーション用にデータ件数調整
+        if (reportsCount > 15) {
+            if (reportsCount > 15 * page) {
+                reportsCount = 15;
+            } else {
+                reportsCount = reportsCount % 15;
+            }
+        }
+
+        int count = 0;
+        for (int i = 15 * (page - 1); count < reportsCount; i++) {
+            reportsPerPage.add(reports.get(i));
+            count++;
+        }
+        return reportsPerPage;
 
     }
 
