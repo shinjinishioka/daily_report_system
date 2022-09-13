@@ -38,6 +38,7 @@ public class EmployeeAction extends ActionBase {
         service.close();
     }
 
+
     /**
      * 一覧画面を表示する
      * @throws ServletException
