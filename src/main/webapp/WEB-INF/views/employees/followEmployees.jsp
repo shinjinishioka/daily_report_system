@@ -11,7 +11,7 @@
     value="${ForwardConst.CMD_FOLLOW_DELETE.getValue()}" />
 <c:set var="commFollowIdx"
     value="${ForwardConst.CMD_FOLLOW_INDEX.getValue()}" />
-<c:set var="count" value="0"/>
+<c:set var="count" value="0" />
 
 <c:import url="../layout/app.jsp">
     <c:param name="content">
@@ -73,5 +73,8 @@
                 </c:choose>
             </c:forEach>
         </div>
+        <p>
+            <a href="<c:url value='?action=Top&command=index'/>">Topに戻る</a>
+        </p>
     </c:param>
 </c:import>

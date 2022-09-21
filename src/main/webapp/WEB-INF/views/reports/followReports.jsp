@@ -60,7 +60,9 @@
                 </c:choose>
             </c:forEach>
         </div>
-
+        <p>
+            <a href="<c:url value='?action=Top&command=index'/>">Topに戻る</a>
+        </p>
 
     </c:param>
 </c:import>
