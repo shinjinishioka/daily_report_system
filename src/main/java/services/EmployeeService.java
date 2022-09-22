@@ -290,12 +290,12 @@ public class EmployeeService extends ServiceBase {
         return follows;
     }
 */
-    public EmployeeView getFollow(String code) {
+    public Employee getFollow(String code) {
         Employee employee = em.createNamedQuery(JpaConst.Q_EMP_REGISTERED_BY_CODE, Employee.class)
                 .setParameter(JpaConst.JPQL_PARM_CODE, code)
                 .getSingleResult();
 
-        return EmployeeConverter.toView(employee);
+        return employee;
     }
 
     public Follows getFollowDataById(int code) {

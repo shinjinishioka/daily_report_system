@@ -30,10 +30,10 @@
                 <c:forEach var="employee" items="${employees}" varStatus="status">
 
                     <c:if
-                        test="${sessionScope.login_employee.id != employee.id && employee.deleteFlag != AttributeConst.DEL_FLAG_TRUE.getIntegerValue()}">
+                        test="${sessionScope.login_employee.code != employee.code && employee.deleteFlag != AttributeConst.DEL_FLAG_TRUE.getIntegerValue()}">
                         <c:set var="followed" value="0" />
                         <c:forEach var="follow" items="${follows}">
-                            <c:if test="${follow.followCode.id == employee.id}">
+                            <c:if test="${follow.followCode.code == employee.code}">
                                 <c:set var="followed" value="1" />
                                 <c:set var="followId" value="${follow.id}" />
                             </c:if>
@@ -48,7 +48,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <a
-                                            href="<c:url value='?action=${actEmp}&command=${commFAdd}&id=${employee.id}' />">フォローする</a>
+                                            href="<c:url value='?action=${actEmp}&command=${commFAdd}&id=${employee.code}' />">フォローする</a>
                                     </c:otherwise>
                                 </c:choose></td>
                         </tr>

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
-import actions.views.EmployeeConverter;
 import actions.views.EmployeeView;
 import constants.AttributeConst;
 import constants.ForwardConst;
@@ -37,7 +36,6 @@ public class EmployeeAction extends ActionBase {
 
         service.close();
     }
-
 
     /**
      * 一覧画面を表示する
@@ -335,7 +333,7 @@ public class EmployeeAction extends ActionBase {
         String loginCode = loginEmployee.getCode();
         //フォローする社員コード取得
         String followCode = getRequestParam(AttributeConst.EMP_ID);
-        Employee fEmp = EmployeeConverter.toModel(service.getFollow(followCode));
+        Employee fEmp = service.getFollow(followCode);
         //パラメータの値を元にインスタンスを作成する
         Follows f = new Follows(null, loginCode, fEmp, null);
         //登録
